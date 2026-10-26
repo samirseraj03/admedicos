@@ -1,23 +1,44 @@
+---
+import manropeUrl from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	robots?: string;
+}
+
+const {
+	title = 'Clínica Dental Diseñando Sonrisas | Granollers',
+	description = 'Conoce la Clínica Dental Diseñando Sonrisas del Dr. Raduan y el Dr. Abdul en Granollers. Descubre la clínica y solicita tu primera visita.',
+	image = '/photos/DSC05834.webp',
+	robots = 'index, follow',
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<meta name="robots" content={robots} />
+		<meta name="theme-color" content="#f5f1e8" />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, 'https://admedicos.com')} />
+		<meta property="og:image:alt" content="Clínica Dental Diseñando Sonrisas en Granollers" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preload" href={manropeUrl} as="font" type="font/woff2" crossorigin />
+		<title>{title}</title>
 	</head>
 	<body>
+		<a class="skip-link" href="#contenido">Saltar al contenido</a>
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

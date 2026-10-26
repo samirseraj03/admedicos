@@ -1,0 +1,78 @@
+---
+import { clinic, navigation } from '../config/clinic';
+---
+
+<header class="site-header">
+  <nav aria-label="Navegación principal" class="nav-pill">
+    <a href="/#inicio" class="wordmark" aria-label="Diseñando Sonrisas, inicio">
+      <span>Diseñando</span><span>Sonrisas<span class="text-copper">.</span></span>
+    </a>
+    <div class="desktop-links">
+      {navigation.map((link) => <a class="nav-link" href={`/${link.href}`} data-section-link>{link.label}</a>)}
+    </div>
+    <div class="flex items-center gap-2">
+      <a class="button button-small" href={`/${clinic.bookingHref}`}>Pedir primera visita</a>
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false" data-menu-toggle hidden>
+        <span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <nav class="no-js-nav" aria-label="Secciones" data-fallback-nav>{navigation.map((link) => <a href={`/${link.href}`}>{link.label}</a>)}</nav>
+</header>
+
+<dialog id="mobile-menu" class="mobile-menu" aria-label="Menú de navegación">
+  <div class="mobile-menu-top">
+    <span class="wordmark"><span>Diseñando</span><span>Sonrisas.</span></span>
+    <button class="menu-toggle is-open" type="button" aria-label="Cerrar menú" data-menu-close><span></span><span></span></button>
+  </div>
+  <nav aria-label="Navegación móvil" class="mobile-links">
+    {navigation.map((link, index) => <a href={`/${link.href}`} style={`--link-delay: ${index * 50}ms`}><span class="text-sm text-copper-dark">0{index + 1}</span>{link.label}</a>)}
+  </nav>
+  <a class="button self-start" href={`/${clinic.bookingHref}`}>Pedir primera visita</a>
+  <p class="mt-8 text-sm text-ink/65">Granollers · {clinic.phone}</p>
+</dialog>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const dialog = document.querySelector<HTMLDialogElement>('#mobile-menu');
+  const close = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+  if (toggle && dialog && close) {
+    toggle.hidden = false;
+    document.querySelector<HTMLElement>('[data-fallback-nav]')!.hidden = true;
+    const closeMenu = (restoreFocus = true) => {
+      dialog.close();
+      document.body.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) toggle.focus({ preventScroll: true });
+    };
+    toggle.addEventListener('click', () => {
+      dialog.showModal();
+      document.body.classList.add('menu-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      close.focus();
+    });
+    close.addEventListener('click', () => closeMenu());
+    dialog.addEventListener('cancel', (event) => { event.preventDefault(); closeMenu(); });
+    dialog.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => link.addEventListener('click', () => {
+      closeMenu(false);
+      const target = document.querySelector<HTMLElement>(new URL(link.href).hash);
+      requestAnimationFrame(() => target?.focus({ preventScroll: true }));
+    }));
+    const desktop = matchMedia('(min-width: 1024px)');
+    desktop.addEventListener('change', () => { if (desktop.matches && dialog.open) closeMenu(); });
+  }
+
+  const sectionLinks = document.querySelectorAll<HTMLAnchorElement>('[data-section-link]');
+  const sections = [...document.querySelectorAll<HTMLElement>('[data-nav-section]')];
+  const activeSections = new Set<string>();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => entry.isIntersecting ? activeSections.add(entry.target.id) : activeSections.delete(entry.target.id));
+    const active = sections.find((section) => activeSections.has(section.id));
+    if (!active) return;
+    sectionLinks.forEach((link) => {
+      if (new URL(link.href).hash === `#${active.id}`) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }, { rootMargin: '-20% 0px -55% 0px' });
+  sections.forEach((section) => observer.observe(section));
+</script>

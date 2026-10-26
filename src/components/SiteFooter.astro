@@ -1,0 +1,18 @@
+---
+import { clinic } from '../config/clinic';
+---
+<footer class="bg-ink px-6 py-12 text-ivory md:px-12">
+  <div class="page-width flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+    <div>
+      <a href="/#inicio" class="wordmark inline-block"><span>Diseñando</span><span>Sonrisas<span class="text-copper">.</span></span></a>
+      <p class="mt-4 text-sm text-ivory/70">Clínica dental en Granollers</p>
+      <a class="text-link mt-2 inline-block text-sm text-ivory/80" href={clinic.phoneHref}>{clinic.phone}</a>
+    </div>
+    <div class="flex flex-col gap-4 md:items-end">
+      <nav aria-label="Información legal" class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ivory/80">
+        {clinic.legal.map((link) => <a class="text-link py-2" href={link.href}>{link.label}</a>)}
+      </nav>
+      <p class="text-xs text-ivory/60">© {new Date().getFullYear()} {clinic.name}</p>
+    </div>
+  </div>
+</footer>

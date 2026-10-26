@@ -1,11 +1,112 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ScrollWorld from '../components/ScrollWorld.astro';
+import { clinic } from '../config/clinic';
+import raduan from '../assets/photos/raduan-v2.webp';
+import abdul from '../assets/photos/abdul-v4.webp';
+import firstVisit from '../assets/photos/TU-PRIMERA-VISITA-PAG-PRINCIPAL-scaled.webp';
+import facade from '../assets/photos/DSC05834.webp';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const doctors = [
+  { name: 'Dr. Raduan', surname: 'Raduan Waez Tatari', photo: raduan, bio: 'Licenciado en Odontología por la Universitat Internacional de Catalunya en 2006. Su formación abarca ortodoncia, implantología y estética dental.' },
+  { name: 'Dr. Abdul', surname: 'Abdul Waez Tatari', photo: abdul, bio: 'Licenciado en Odontología desde 2005, con formación de máster en implantología. Su práctica se centra en la atención personalizada a cada paciente.' },
+];
+const steps = [
+  { title: 'Solicita tu visita', text: 'Llama a la clínica para pedir tu primera cita.' },
+  { title: 'Consulta la disponibilidad', text: 'Confirma con el equipo la fecha y las condiciones de tu visita.' },
+  { title: 'Ven a conocernos', text: 'Acude a la clínica para la valoración correspondiente.' },
+];
+const tagline = ['Conoce la clínica.', 'Conoce a los doctores.', 'Da el primer paso.'];
 ---
 
 <Layout>
-	<Welcome />
+  <SiteHeader />
+  <main id="contenido">
+    <section id="inicio" aria-label="Inicio" data-nav-section tabindex="-1">
+      <ScrollWorld />
+      <div class="tagline-block section-pad">
+        <div class="page-width grid gap-8 lg:grid-cols-[1fr_2fr]">
+          <p class="eyebrow text-copper-dark" data-reveal>Un primer paso,<br />más cerca.</p>
+          <p class="tagline text-4xl font-medium tracking-tight text-balance md:text-5xl lg:text-6xl" data-tagline aria-label={tagline.join(' ')}>
+            {tagline.map((line) => <span class="block" aria-hidden="true">{line.split(' ').map((word) => <><span data-word>{word}</span>{' '}</>)}</span>)}
+          </p>
+        </div>
+      </div>
+    </section>
+    <section id="doctores" class="section-pad bg-paper" aria-labelledby="doctores-title" data-nav-section tabindex="-1">
+      <div class="page-width">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow text-copper-dark">01 / Los doctores</p>
+          <h2 id="doctores-title" class="section-title">Dr. Raduan<br />y Dr. Abdul</h2>
+          <p class="section-intro">Conoce a los doctores de<br class="hidden md:block" /> Diseñando Sonrisas.</p>
+        </div>
+        <div class="doctors-grid">
+          {doctors.map((doctor, index) => (
+            <article class:list={['doctor', { 'doctor-offset': index === 1 }]} data-reveal>
+              <div class="doctor-photo">
+                <Picture src={doctor.photo} formats={['avif']} fallbackFormat="webp" widths={[350, 500]} sizes="(min-width: 1024px) 440px, (min-width: 640px) 45vw, 100vw" alt={`Retrato del ${doctor.name}`} loading="lazy" class="h-full w-full object-cover" />
+              </div>
+              <div class="mt-6 flex items-baseline justify-between gap-4">
+                <h3 class="text-3xl font-medium tracking-tight">{doctor.name}</h3>
+                <span class="text-sm text-copper-dark">Odontólogo</span>
+              </div>
+              <p class="mt-2 text-sm text-ink/65">{doctor.surname}</p>
+              <p class="mt-4 max-w-md text-base text-ink/75 text-pretty">{doctor.bio}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+    <section id="primera-visita" class="section-pad" aria-labelledby="visita-title" data-nav-section tabindex="-1">
+      <div class="page-width visit-grid">
+        <div class="visit-photo" data-reveal>
+          <Picture src={firstVisit} formats={['avif']} fallbackFormat="webp" widths={[480, 800, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" alt="Despacho de la clínica con mesa, sillas y luz natural" loading="lazy" class="h-full w-full object-cover" />
+          <span class="photo-caption">Un espacio para conocernos.</span>
+        </div>
+        <div class="visit-copy" data-reveal>
+          <p class="eyebrow text-copper-dark">02 / Tu primera visita</p>
+          <h2 id="visita-title" class="section-title mt-6">Tu primera<br />visita</h2>
+          <p class="mt-6 max-w-lg text-lg text-ink/75 text-pretty">Cuéntanos qué necesitas y solicita una primera visita en la clínica.</p>
+          <ol class="mt-8 flex flex-col gap-6">
+            {steps.map((step, index) => <li class="flex gap-4">
+              <span class="step-number" aria-hidden="true">0{index + 1}</span>
+              <div><h3 class="text-base font-semibold">{step.title}</h3><p class="mt-2 text-sm text-ink/70 text-pretty">{step.text}</p></div>
+            </li>)}
+          </ol>
+          <a class="button mt-8" href="#contacto">Pedir primera visita <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+    <section id="contacto" class="section-pad bg-paper" aria-labelledby="contacto-title" data-nav-section tabindex="-1">
+      <div class="page-width">
+        <div class="contact-heading" data-reveal>
+          <div><p class="eyebrow text-copper-dark">03 / Contacto</p><h2 id="contacto-title" class="section-title mt-6">Da el<br />primer paso.</h2></div>
+          <div class="max-w-md"><p class="text-lg text-ink/75 text-pretty">Para pedir tu primera visita, llama a la clínica. Te atenderemos para consultar disponibilidad y condiciones.</p><a href={clinic.phoneHref} class="button mt-8">Llamar para pedir primera visita <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <div class="contact-grid mt-16">
+          <div class="contact-details" data-reveal>
+            <p class="text-xl font-medium">{clinic.name}</p>
+            <address class="mt-8 not-italic">
+              <p class="eyebrow text-ink/60">Encuéntranos</p>
+              <p class="mt-3 text-xl">{clinic.address}<br /><span class="text-base text-ink/70">{clinic.city}</span></p>
+              <p class="eyebrow mt-8 text-ink/60">Hablemos</p>
+              <a href={clinic.phoneHref} class="text-link mt-3 inline-block text-2xl font-medium">{clinic.phone}</a><br />
+              <a href={`mailto:${clinic.email}`} class="text-link mt-2 inline-block break-all text-base text-ink/75">{clinic.email}</a>
+            </address>
+            <p class="mt-8 text-sm text-ink/60">Granollers · Barcelona</p>
+          </div>
+          <Picture src={facade} formats={['avif']} fallbackFormat="webp" widths={[480, 800, 1200]} sizes="(min-width: 1024px) 55vw, 100vw" alt="Fachada y entrada de Diseñando Sonrisas en Passeig Cristòfol Colom, 9" loading="lazy" class="contact-photo h-full w-full object-cover" />
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
 </Layout>
+
+<script>
+  import { initReveals } from '../scripts/reveals';
+  initReveals();
+</script>

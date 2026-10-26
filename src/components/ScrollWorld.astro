@@ -1,0 +1,63 @@
+---
+import { Picture } from 'astro:assets';
+import { scrollWorld } from '../config/scroll-world';
+import reception from '../assets/photos/DSC05839.webp';
+import waiting from '../assets/photos/DSC05844.webp';
+---
+
+<div class="world" data-world data-mode="static" style={`--frame-desktop: ${scrollWorld.framing.desktop}; --frame-mobile: ${scrollWorld.framing.mobile}; --scroll-desktop: ${scrollWorld.scrollScreens.desktop}; --scroll-mobile: ${scrollWorld.scrollScreens.mobile}`}>
+  <div class="world-stage">
+    <div class="world-media" aria-hidden="true">
+      <img class="world-fallback" src={scrollWorld.fallback} alt="" width="2560" height="1707" decoding="async" />
+      <video class="world-video" muted playsinline preload="none" poster={scrollWorld.poster} tabindex="-1" disablepictureinpicture></video>
+      <img class="world-poster" src={scrollWorld.poster} alt="" width="1280" height="720" fetchpriority="high" decoding="async" />
+    </div>
+    <div class="world-shade" aria-hidden="true"></div>
+    <div class="world-top-note" aria-hidden="true"><span class="status-dot"></span> Granollers, Barcelona</div>
+    <div class="world-content">
+      <div class="world-copy is-active" data-world-copy="0">
+        <p class="eyebrow text-ivory/85">Clínica dental en Granollers</p>
+        <h1 class="hero-title mt-6 text-balance">Diseñando sonrisas<br /><span class="text-4xl md:text-5xl lg:text-6xl">desde 2006</span></h1>
+        <p class="hero-description mt-6 text-pretty">Clínica Dental Diseñando Sonrisas, del Dr. Raduan y el Dr. Abdul, en Granollers.</p>
+        <a href="#contacto" class="button mt-8">Pedir primera visita <span aria-hidden="true">↗</span></a>
+      </div>
+      {scrollWorld.beats.slice(1).map((beat, index) => (
+        <div class="world-copy world-scene-copy" data-world-copy={index + 1} inert aria-hidden="true">
+          <p class="eyebrow text-ivory/85">{beat.label}</p>
+          <h2 class="mt-6 whitespace-pre-line text-4xl font-medium tracking-tight text-balance md:text-5xl lg:text-6xl">{beat.title}</h2>
+        </div>
+      ))}
+    </div>
+    <div class="world-bottom">
+      <div>
+        <p class="world-hint text-sm" data-world-hint>Un primer vistazo a nuestra clínica</p>
+        <div class="world-progress" aria-hidden="true"><span data-world-progress></span></div>
+        <p class="mt-3 text-xs tracking-wide" data-world-location aria-hidden="true">01 / 04 · La clínica</p>
+      </div>
+      <a class="world-skip text-link text-sm" href="#doctores">Conoce a los doctores <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="world-load-control" hidden data-world-load-control>
+      <button class="text-link text-sm" type="button" data-world-load>Activar recorrido al deslizar</button>
+      <span class="text-xs" role="status" data-world-status></span>
+    </div>
+  </div>
+</div>
+
+<div class="static-story section-pad" data-static-story>
+  <div class="page-width grid gap-8 md:grid-cols-2 md:gap-12">
+    <figure>
+      <Picture src={reception} formats={['avif']} fallbackFormat="webp" widths={[480, 800, 1200]} sizes="(min-width: 768px) 45vw, 100vw" alt="Recepción de la clínica, con paneles de madera y zona de entrada" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+      <figcaption class="mt-4 text-lg">El recorrido empieza aquí.</figcaption>
+    </figure>
+    <figure>
+      <Picture src={waiting} formats={['avif']} fallbackFormat="webp" widths={[480, 800, 1200]} sizes="(min-width: 768px) 45vw, 100vw" alt="Zona de espera de la clínica con butacas y plantas" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+      <figcaption class="mt-4 text-lg">Conoce el espacio antes de venir.</figcaption>
+    </figure>
+  </div>
+</div>
+
+<script>
+  import { mountClinicWorld } from '../scripts/scroll-world';
+  const world = document.querySelector<HTMLElement>('[data-world]');
+  if (world) mountClinicWorld(world);
+</script>
